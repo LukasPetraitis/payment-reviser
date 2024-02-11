@@ -26,6 +26,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>mockito-core</artifactId>
+					<groupId>org.mockito</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>mockito-junit-jupiter</artifactId>
+					<groupId>org.mockito</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>json-path</artifactId>
+					<groupId>com.jayway.jsonpath</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
