@@ -1,7 +1,7 @@
 package it.systems.paymentreviser.service;
 
-import it.systems.paymentreviser.entity.Payment;
+import it.systems.paymentreviser.entity.PaymentDTO;
 
 public interface PaymentService {
-	boolean createCase(Payment payment);
+	boolean createCase(PaymentDTO payment);
 }
