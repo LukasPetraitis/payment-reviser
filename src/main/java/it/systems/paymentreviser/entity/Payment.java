@@ -11,13 +11,4 @@ public class Payment {
 		this.amount = amount;
 		this.currency = currency;
 	}
-	
-	@Override
-	public String toString() {
-		return "Payment{" +
-				"id=" + id +
-				", amount='" + amount + '\'' +
-				", currency=" + currency +
-				'}';
-	}
 }

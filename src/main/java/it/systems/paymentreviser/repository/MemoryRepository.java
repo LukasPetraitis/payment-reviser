@@ -6,10 +6,10 @@ import java.util.UUID;
 
 public interface MemoryRepository {
 	
-	boolean save(Case aCase);
-	Case findOne(UUID id);
-	boolean exists(UUID id);
+	Case save(Case aCase);
+	Case findOne(Integer id);
+	boolean exists(Integer id);
 	Iterable<Case> findAll();
-	Iterable<Case> findAll(Iterable<UUID> ids);
+	Iterable<Case> findAll(Iterable<Integer> ids);
 	long count();
 }

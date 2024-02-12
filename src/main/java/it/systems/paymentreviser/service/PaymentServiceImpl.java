@@ -14,8 +14,8 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public boolean createCase(PaymentDTO paymentDTO) {
-		Case paymentCase = Case.createCase(paymentDTO);
+	public Case createCase(PaymentDTO paymentDTO) {
+		Case paymentCase = new Case(paymentDTO);
 		return memoryRepository.save(paymentCase);
 	}
 }
