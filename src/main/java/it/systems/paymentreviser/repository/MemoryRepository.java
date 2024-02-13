@@ -2,14 +2,13 @@ package it.systems.paymentreviser.repository;
 
 import it.systems.paymentreviser.entity.Case;
 
-import java.util.UUID;
+import java.util.List;
 
 public interface MemoryRepository {
 	
-	Case save(Case aCase);
+	Integer save(Case aCase);
 	Case findOne(Integer id);
 	boolean exists(Integer id);
-	Iterable<Case> findAll();
-	Iterable<Case> findAll(Iterable<Integer> ids);
+	List<Case> findAll();
 	long count();
 }
