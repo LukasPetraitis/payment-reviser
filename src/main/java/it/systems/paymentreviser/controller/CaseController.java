@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -23,6 +22,10 @@ public class CaseController {
 	
 		@PutMapping("create")
 		public ResponseEntity<String> create(@RequestBody PaymentDTO paymentDTO) {
+			if (paymentDTO.id() == null || paymentDTO.amount() == null) {
+				new ResponseEntity<String>("ALl data fields for payment must be not empty", HttpStatus.NOT_ACCEPTABLE);
+			}
+		
 			Integer caseId = paymentService.createCase(paymentDTO);
 			return new ResponseEntity<>("Case with id " + caseId + " created for payment " + paymentDTO, HttpStatus.OK);
 		}
@@ -34,6 +37,10 @@ public class CaseController {
 	
 		@PutMapping("resolve")
 		public ResponseEntity<String> resolveCase(@RequestBody CaseResolveDTO caseResolveDTO) {
+			if(caseResolveDTO.caseId() == null) {
+				return new ResponseEntity<>("You must specify the case ID to resolve case", HttpStatus.NOT_ACCEPTABLE);
+			}
+		
 			boolean isStatusChanged = paymentService.resolveCase(caseResolveDTO);
 			
 			if (isStatusChanged) {
