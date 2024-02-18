@@ -1,56 +1,53 @@
 package it.systems.paymentreviser.service;
 
+import it.systems.paymentreviser.dto.UnresolvedCasesDataDTO;
 import it.systems.paymentreviser.entity.Case;
-import it.systems.paymentreviser.dto.CaseResolveDTO;
 import it.systems.paymentreviser.dto.PaymentDTO;
-import it.systems.paymentreviser.entity.UnresolvedAmountCount;
-import it.systems.paymentreviser.repository.MemoryRepository;
+import it.systems.paymentreviser.entity.NormalCase;
+import it.systems.paymentreviser.entity.ReturnedCase;
+import it.systems.paymentreviser.enums.ResolutionStatus;
+import it.systems.paymentreviser.exception.NoSuchPaymentTypeException;
+import it.systems.paymentreviser.repository.CaseRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-	private final MemoryRepository memoryRepository;
+	private final CaseRepository caseRepository;
 	
-	public PaymentServiceImpl(MemoryRepository memoryRepository) {
-		this.memoryRepository = memoryRepository;
+	public PaymentServiceImpl(CaseRepository caseRepository) {
+		this.caseRepository = caseRepository;
 	}
 	
 	@Override
-	public Integer createCase(PaymentDTO paymentDTO) {
-		Case paymentNormalCase = new Case(paymentDTO);
-		return memoryRepository.save(paymentNormalCase);
+	public Case createCase(PaymentDTO paymentDTO) {
+		Case unresolvedCase = switch (paymentDTO.paymentType()) {
+			case NORMAL -> new NormalCase(paymentDTO);
+			case RETURNED -> new ReturnedCase(paymentDTO);
+			default -> throw new NoSuchPaymentTypeException("Case with such payment type cannot be created");
+		};
+		return caseRepository.save(unresolvedCase);
 	}
 	
 	@Override
 	public List<Case> getAll() {
-		return new ArrayList<Case>(memoryRepository.findAll());
+		return new ArrayList<>(caseRepository.findAll());
 	}
 	
 	@Override
-	public boolean resolveCase(CaseResolveDTO caseResolveDTO) {
-		Optional<Case> caseForResolution = Optional.of(memoryRepository.findOne(caseResolveDTO.caseId()));
-		
-		if(!caseForResolution.isPresent()) {
-			return false;
-		}
-		
-		memoryRepository.save(caseForResolution.get());
-		return caseForResolution.get().changeResolutionStatus(caseResolveDTO.resolutionStatus());
+	public Case resolveCase(Integer id, ResolutionStatus resolutionStatus) {
+		Case caseForResolution = caseRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Case with id %s does not exist", id)));
+		caseForResolution.changeResolutionStatus(resolutionStatus);
+		return caseRepository.update(caseForResolution);
 	}
 	
-	public BigDecimal getUnresolvedAmount() {
-		List<Case> amountCounts = new ArrayList<>(memoryRepository.findAll());
-
-		BigDecimal totalAmount = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);
-		for(UnresolvedAmountCount amount : amountCounts) {
-			totalAmount = totalAmount.add(amount.getUnresolvedAmount());
-		}
-		return totalAmount;
+	@Override
+	public UnresolvedCasesDataDTO getUnresolvedCasesData() {
+		return caseRepository.getUnresolvedCasesData();
 	}
 }

@@ -7,53 +7,36 @@ import it.systems.paymentreviser.enums.ValidCurrency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class Case implements UnresolvedAmountCount {
-	private static AtomicInteger ID_GENERATOR = new AtomicInteger(1000);
-	private static AtomicInteger UNPROCESSED_PAYMENTS_COUNTER = new AtomicInteger(0);
-	private final Integer id;
-	private ResolutionStatus resolution;
-	private final PaymentType paymentType;
-	private final Payment payment;
+public abstract class Case {
+	
+	protected Integer id;
+	protected ResolutionStatus resolution;
+	protected final PaymentType paymentType;
+	protected final Payment payment;
 
-	public Case(PaymentDTO paymentDTO) {
-		id = ID_GENERATOR.getAndIncrement();
+	protected Case(PaymentDTO paymentDTO) {
 		this.payment = new Payment(paymentDTO.id(), paymentDTO.amount(), paymentDTO.currency());
 		this.paymentType = paymentDTO.paymentType();
-		UNPROCESSED_PAYMENTS_COUNTER.incrementAndGet();
+		this.resolution = ResolutionStatus.UNRESOLVED;
 	}
+	
+	public abstract void changeResolutionStatus(ResolutionStatus resolution);
+	
+	public ResolutionStatus getResolution() {
+		return resolution;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
 	
-	public boolean changeResolutionStatus(ResolutionStatus resolution) {
-		if (this.resolution != null ) {
-			return false;
-		} else if (paymentType == PaymentType.NORMAL) {
-			this.resolution = resolution;
-			UNPROCESSED_PAYMENTS_COUNTER.decrementAndGet();
-			return true;
-		} else if (paymentType == PaymentType.RETURNED) {
-			if (ResolutionStatus.RESUBMIT == resolution) {
-				this.resolution = resolution;
-				UNPROCESSED_PAYMENTS_COUNTER.decrementAndGet();
-				return true;
-			}
-		}
-		return false;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
-	public static Integer unresolvedCasesCount() {
-		return UNPROCESSED_PAYMENTS_COUNTER.get();
-	}
-	
-	@Override
-	public BigDecimal getUnresolvedAmount() {
-		if(resolution == null) {
-			return payment.amount;
-		}
-		return BigDecimal.ZERO;
+	public BigDecimal getPaymentAmount() {
+		return payment.amount;
 	}
 	
 	public class Payment {
