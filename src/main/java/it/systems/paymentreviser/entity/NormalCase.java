@@ -12,7 +12,7 @@ public class NormalCase extends Case{
 	@Override
 	public void changeResolutionStatus(ResolutionStatus resolution) {
 		if (super.resolution != ResolutionStatus.UNRESOLVED ) {
-			throw new CaseResolutionStatusException(super.id, super.paymentType);
+			throw new CaseResolutionStatusException(super.id, this.getClass().getSimpleName());
 		}
 		this.resolution = resolution;
 	}

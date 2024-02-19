@@ -12,9 +12,9 @@ public class ReturnedCase extends Case {
 	@Override
 	public void changeResolutionStatus(ResolutionStatus resolution) {
 		if (super.resolution != ResolutionStatus.UNRESOLVED) {
-			throw new CaseResolutionStatusException(super.id, super.paymentType);
+			throw new CaseResolutionStatusException(super.id, this.getClass().getSimpleName());
 		} else if (resolution == ResolutionStatus.RETURN) {
-			throw new CaseResolutionStatusException();
+			throw new CaseResolutionStatusException(this.getClass().getSimpleName());
 		} else if (ResolutionStatus.RESUBMIT == resolution) {
 			this.resolution = resolution;
 		}

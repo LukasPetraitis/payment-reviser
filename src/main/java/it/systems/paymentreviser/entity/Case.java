@@ -1,7 +1,6 @@
 package it.systems.paymentreviser.entity;
 
 import it.systems.paymentreviser.dto.PaymentDTO;
-import it.systems.paymentreviser.enums.PaymentType;
 import it.systems.paymentreviser.enums.ResolutionStatus;
 import it.systems.paymentreviser.enums.ValidCurrency;
 
@@ -12,12 +11,10 @@ public abstract class Case {
 	
 	protected Integer id;
 	protected ResolutionStatus resolution;
-	protected final PaymentType paymentType;
 	protected final Payment payment;
 
 	protected Case(PaymentDTO paymentDTO) {
 		this.payment = new Payment(paymentDTO.id(), paymentDTO.amount(), paymentDTO.currency());
-		this.paymentType = paymentDTO.paymentType();
 		this.resolution = ResolutionStatus.UNRESOLVED;
 	}
 	
