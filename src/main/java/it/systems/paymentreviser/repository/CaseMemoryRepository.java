@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class CaseMemoryRepository implements CaseRepository {
-	private static AtomicInteger ID_GENERATOR = new AtomicInteger(1000);
+	private AtomicInteger ID_GENERATOR = new AtomicInteger(1000);
 	private final Map<Integer, Case> caseMap = new HashMap<>();
 	
 	@Override
@@ -30,20 +30,10 @@ public class CaseMemoryRepository implements CaseRepository {
 	public Optional<Case> findById(Integer id) {
 		return Optional.ofNullable(caseMap.get(id));
 	}
-	
-	@Override
-	public boolean exists(Integer id) {
-		return caseMap.containsKey(id);
-	}
-	
+
 	@Override
 	public List<Case> findAll() {
 		return caseMap.values().stream().toList();
-	}
-	
-	@Override
-	public long count() {
-		return caseMap.size();
 	}
 	
 	@Override

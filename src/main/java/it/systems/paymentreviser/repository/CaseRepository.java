@@ -11,8 +11,6 @@ public interface CaseRepository {
 	Case save(Case entity);
 	Case update(Case entity);
 	Optional<Case> findById(Integer id);
-	boolean exists(Integer id);
 	List<Case> findAll();
-	long count();
 	UnresolvedCasesDataDTO getUnresolvedCasesData();
 }

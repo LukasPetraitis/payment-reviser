@@ -35,7 +35,7 @@ public class CaseController {
 			return paymentService.getAll();
 		}
 	
-		@PutMapping("{id}")
+		@PutMapping("{id}/resolution")
 		public Case resolveCase(@PathVariable Integer id, @RequestBody ResolutionStatus resolutionStatus) {
 			return paymentService.resolveCase(id, resolutionStatus);
 		}

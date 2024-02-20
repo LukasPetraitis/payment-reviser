@@ -1,20 +1,16 @@
 package it.systems.paymentreviser.entity;
 
-import it.systems.paymentreviser.dto.PaymentDTO;
 import it.systems.paymentreviser.enums.ResolutionStatus;
-import it.systems.paymentreviser.enums.ValidCurrency;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public abstract class Case {
-	
 	protected Integer id;
 	protected ResolutionStatus resolution;
 	protected final Payment payment;
 
-	protected Case(PaymentDTO paymentDTO) {
-		this.payment = new Payment(paymentDTO.id(), paymentDTO.amount(), paymentDTO.currency());
+	protected Case(Payment payment) {
+		this.payment = payment;
 		this.resolution = ResolutionStatus.UNRESOLVED;
 	}
 	
@@ -33,19 +29,7 @@ public abstract class Case {
 	}
 	
 	public BigDecimal getPaymentAmount() {
-		return payment.amount;
+		return payment.getAmount();
 	}
 	
-	public class Payment {
-		
-		private final long id;
-		private final BigDecimal amount;
-		private final ValidCurrency currency;
-		
-		public Payment(long id, BigDecimal amount, ValidCurrency currency) {
-			this.id = id;
-			this.amount = amount.setScale(2, RoundingMode.HALF_UP);
-			this.currency = currency;
-		}
-	}
 }

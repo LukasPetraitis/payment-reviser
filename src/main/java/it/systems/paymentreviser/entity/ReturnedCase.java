@@ -1,11 +1,10 @@
 package it.systems.paymentreviser.entity;
 
-import it.systems.paymentreviser.dto.PaymentDTO;
 import it.systems.paymentreviser.enums.ResolutionStatus;
 import it.systems.paymentreviser.exception.CaseResolutionStatusException;
 
 public class ReturnedCase extends Case {
-	public ReturnedCase(PaymentDTO paymentDTO) {
+	public ReturnedCase(Payment paymentDTO) {
 		super(paymentDTO);
 	}
 	

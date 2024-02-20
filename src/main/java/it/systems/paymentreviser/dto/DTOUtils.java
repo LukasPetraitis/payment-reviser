@@ -1,6 +1,5 @@
 package it.systems.paymentreviser.dto;
 
-import it.systems.paymentreviser.dto.PaymentDTO;
 import org.apache.commons.lang3.ObjectUtils;
 
 public class DTOUtils {

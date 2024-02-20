@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PaymentService {
 	
-	Case createCase(PaymentDTO payment);
+	Case createCase(PaymentDTO paymentDTO);
 	
 	List<Case> getAll();
 	

@@ -1,9 +1,10 @@
 package it.systems.paymentreviser.service;
 
+import it.systems.paymentreviser.dto.PaymentDTO;
 import it.systems.paymentreviser.dto.UnresolvedCasesDataDTO;
 import it.systems.paymentreviser.entity.Case;
-import it.systems.paymentreviser.dto.PaymentDTO;
 import it.systems.paymentreviser.entity.NormalCase;
+import it.systems.paymentreviser.entity.Payment;
 import it.systems.paymentreviser.entity.ReturnedCase;
 import it.systems.paymentreviser.enums.ResolutionStatus;
 import it.systems.paymentreviser.exception.NoSuchPaymentTypeException;
@@ -25,9 +26,14 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	public Case createCase(PaymentDTO paymentDTO) {
+		
+		Payment payment = new Payment(paymentDTO.id(),
+				paymentDTO.amount(),
+				paymentDTO.currency());
+		
 		Case unresolvedCase = switch (paymentDTO.paymentType()) {
-			case NORMAL -> new NormalCase(paymentDTO);
-			case RETURNED -> new ReturnedCase(paymentDTO);
+			case NORMAL -> new NormalCase(payment);
+			case RETURNED -> new ReturnedCase(payment);
 			default -> throw new NoSuchPaymentTypeException("Case with such payment type cannot be created");
 		};
 		return caseRepository.save(unresolvedCase);
