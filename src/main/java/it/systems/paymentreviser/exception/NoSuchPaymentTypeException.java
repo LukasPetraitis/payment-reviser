@@ -1,0 +1,10 @@
+package it.systems.paymentreviser.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class NoSuchPaymentTypeException extends ResponseStatusException {
+	public NoSuchPaymentTypeException(String message) {
+		super(HttpStatus.BAD_REQUEST, message);
+	}
+}
